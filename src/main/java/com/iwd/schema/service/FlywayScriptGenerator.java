@@ -34,7 +34,6 @@ import org.flywaydb.core.internal.dbsupport.oracle.OracleDbSupport;
 import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 import org.flywaydb.core.internal.resolver.sql.SqlMigrationResolver;
 import org.flywaydb.core.internal.util.Location;
-import org.junit.Before;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -83,7 +82,7 @@ public class FlywayScriptGenerator {
 		logger.info("Output to filename: {}", fileName);
 
 		File outputFile = new File(fileName);
-		
+
 		out = new PrintStream(outputFile);
 
 		MigrationVersion from = MigrationVersion.fromVersion(startingRevision);
@@ -133,7 +132,7 @@ public class FlywayScriptGenerator {
 		pw.close();
 
 		outputFile.setWritable(false);
-		
+
 		logger.info("Have successfully written script to file.");
 	}
 
