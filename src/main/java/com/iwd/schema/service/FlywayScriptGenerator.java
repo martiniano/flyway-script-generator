@@ -30,10 +30,10 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.resolver.ResolvedMigration;
 import org.flywaydb.core.internal.dbsupport.DbSupport;
-import org.flywaydb.core.internal.dbsupport.oracle.OracleDbSupport;
-import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 import org.flywaydb.core.internal.resolver.sql.SqlMigrationResolver;
 import org.flywaydb.core.internal.util.Location;
+import org.flywaydb.core.internal.util.PlaceholderReplacer;
+import org.flywaydb.core.internal.util.scanner.classpath.ClassPathResource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -52,7 +52,9 @@ public class FlywayScriptGenerator {
 																	// command
 																	// can be
 
-	public static final String INSERT_INTO_SCHEMA_VERSION = "INSERT INTO \"schema_version\"";
+	public static final String METADATA_TABLE_NAME = "schema_version";
+
+	public static final String INSERT_INTO_METADATA_TABLE = "INSERT INTO \"" + METADATA_TABLE_NAME + "\"";
 	public static final String COLUMN_NAMES = "(\"version_rank\", \"installed_rank\", \"version\", \"description\", \"type\", \"script\", \"checksum\", \"installed_by\", \"installed_on\", \"execution_time\", \"success\") ";
 	public static final String VALUES = " VALUES";
 	public static final String TYPE = "SQL"; // the value
@@ -99,11 +101,7 @@ public class FlywayScriptGenerator {
 		String sql;
 		PrintWriter pw = new PrintWriter(FlywayScriptGenerator.getEncodedOutputStreamWriter(out));
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		if (dbSupport instanceof PostgreSQLDbSupport) {
-			preRevisionWritePostgresSQL(pw);
-		} else if (dbSupport instanceof OracleDbSupport) {
-			preRevisionWriteOracle(pw);
-		}
+		preRevisionWriteSQL(pw, dbSupport);
 		for (ResolvedMigration revision : revisions) {
 			if (revision.getVersion().compareTo(from) >= 0 && revision.getVersion().compareTo(to) <= 0) {
 				bytes.reset();
@@ -118,7 +116,7 @@ public class FlywayScriptGenerator {
 				pw.println();
 
 				// do the insert for tracking what has been committed
-				pw.println(INSERT_INTO_SCHEMA_VERSION);
+				pw.println(INSERT_INTO_METADATA_TABLE);
 				pw.println(COLUMN_NAMES);
 				pw.println(VALUES);
 				pw.println(generateInsertValuesForSchemaVersionTable(revision.getVersion().getVersion(),
@@ -137,67 +135,24 @@ public class FlywayScriptGenerator {
 	}
 
 	/**
-	 * Any text that has to be added to the Beginning of the generated script
-	 * For Postgres implementation
+	 * A cleaner implementation to generate the meta data table Uses the flyway
+	 * database schema to be implementation agnostic
 	 * 
 	 * @param pw
 	 */
-	protected void preRevisionWritePostgresSQL(PrintWriter pw) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("-- Create the 'schema_version' table if it doesn't exist\n");
-		sb.append("-- Exists to track what changes have been previously applied\n");
-		sb.append("CREATE TABLE IF NOT EXISTS \"schema_version\" \n");
-		sb.append("  (version_rank int NOT NULL,\n");
-		sb.append("   installed_rank int NOT NULL,\n");
-		sb.append("   version varchar(50) PRIMARY KEY NOT NULL,\n");
-		sb.append("   description varchar(200) NOT NULL,\n");
-		sb.append("   type varchar(20) NOT NULL,\n");
-		sb.append("   script varchar(1000) NOT NULL,\n");
-		sb.append("   checksum int,\n");
-		sb.append("   installed_by varchar(100) NOT NULL,\n");
-		sb.append("   installed_on timestamp DEFAULT now() NOT NULL,\n");
-		sb.append("   execution_time int NOT NULL,\n");
-		sb.append("   success bool NOT NULL);\n");
+	protected void preRevisionWriteSQL(PrintWriter pw, DbSupport dbSupport) {
+		String resourceName = "org/flywaydb/core/internal/dbsupport/" + dbSupport.getDbName()
+				+ "/createMetaDataTable.sql";
+		String source = new ClassPathResource(resourceName, getClass().getClassLoader()).loadAsString("UTF-8");
 
-		pw.println(sb.toString());
-	}
+		String sourceNoSchema = source.replace("\"${schema}\".", "");
 
-	/**
-	 * Any text that has to be added to the Beginning of the generated script
-	 * For Oracle implementation
-	 * 
-	 * @param pw
-	 */
-	protected void preRevisionWriteOracle(PrintWriter pw) {
-		StringBuffer sb = new StringBuffer();
+		Map<String, String> placeholders = new HashMap<String, String>();
+		placeholders.put("table", "schema_version");
+		String sourceNoPlaceholders = new PlaceholderReplacer(placeholders, "${", "}")
+				.replacePlaceholders(sourceNoSchema);
 
-		sb.append("-- Create the 'schema_version' table if it doesn't exist\n");
-		sb.append("-- Exists to track what changes have been previously applied\n");
-		sb.append("declare\n");
-		sb.append("   nCount NUMBER;\n");
-		sb.append("   v_sql LONG;\n");
-		sb.append("begin\n");
-		sb.append("select count(*) into nCount FROM dba_tables where table_name = 'schema_version';\n");
-		sb.append("IF(nCount <= 0) THEN\n");
-		sb.append("v_sql:='\n");
-		sb.append("CREATE TABLE \"schema_version\" (\n");
-		sb.append("    \"version_rank\" INT NOT NULL, \n");
-		sb.append("    \"installed_rank\" INT NOT NULL, \n");
-		sb.append("    \"version\" VARCHAR2(50) NOT NULL, \n");
-		sb.append("    \"description\" VARCHAR2(200) NOT NULL, \n");
-		sb.append("    \"type\" VARCHAR2(20) NOT NULL, \n");
-		sb.append("    \"script\" VARCHAR2(1000) NOT NULL, \n");
-		sb.append("    \"checksum\" INT, \n");
-		sb.append("    \"installed_by\" VARCHAR2(100) NOT NULL, \n");
-		sb.append("    \"installed_on\" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n");
-		sb.append("    \"execution_time\" INT NOT NULL,\n");
-		sb.append("    \"success\" NUMBER(1) NOT NULL)");
-		sb.append("';\n");
-		sb.append("execute immediate v_sql;\n");
-		sb.append("END IF;");
-		sb.append("end;");
-
-		pw.println(sb.toString());
+		pw.println(sourceNoPlaceholders);
 	}
 
 	/**
