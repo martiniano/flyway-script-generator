@@ -135,7 +135,27 @@
 		<url>www.intelliware.com</url>
 	</organization>
 	<scm>
-		<url>https://github.com/Intelliware/flyway-script-generator</url>
+		<connection>https://github.com/Intelliware/flyway-script-generator.git</connection>
+		<url>https://github.com/Intelliware/flyway-script-generator.git</url>
+		<developerConnection>https://github.com/Intelliware/flyway-script-generator.git</developerConnection>
 	</scm>
+	<name>flyway-script-generator</name>
+	<url>https://github.com/Intelliware/flyway-script-generator</url>
+	<description>A wrapper around Flyway to allow for script generation, for enviornments where Flyway is not permitted access to certain controlled environments, such as PROD. 
 
+The generated script can then be audited, reviewed and run manually against said controlled environments.</description>
+	<licenses>
+		<license>
+			<name>Mozilla Public License, Version 2.0</name>
+			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Ernie Shu</name>
+			<email>ernie.shu@intelliware.com</email>
+			<organization>Intelliware Development Inc</organization>
+			<organizationUrl>http://www.intelliware.com</organizationUrl>
+		</developer>
+	</developers>
 </project>

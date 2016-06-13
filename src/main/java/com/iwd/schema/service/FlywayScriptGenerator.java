@@ -37,6 +37,10 @@ import org.flywaydb.core.internal.util.Location;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/.
+ * 
  * A class to generate data scripts to be run by a DBA operations group. The
  * assumption being DBA Operations group will be much more comfortable with
  * running scripts, as opposed to running Flyway.
