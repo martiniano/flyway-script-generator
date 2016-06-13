@@ -1,4 +1,4 @@
-package com.iwd.schema.service;
+package com.intelliware.flywayscriptgenerator.service;
 
 import org.flywaydb.core.internal.dbsupport.DbSupport;
 import org.flywaydb.core.internal.dbsupport.db2.DB2DbSupport;
