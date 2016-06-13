@@ -130,4 +130,12 @@
 		</plugins>
 	</build>
 
+	<organization>
+		<name>Intelliware Development Inc.</name>
+		<url>www.intelliware.com</url>
+	</organization>
+	<scm>
+		<url>https://github.com/Intelliware/flyway-script-generator</url>
+	</scm>
+
 </project>
