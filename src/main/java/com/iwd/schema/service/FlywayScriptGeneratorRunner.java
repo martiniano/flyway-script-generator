@@ -58,8 +58,7 @@ public class FlywayScriptGeneratorRunner {
 			return false;
 		} else if (args.length == 5) {
 			// validate if the database type is appropriate
-			if (!args[4].equalsIgnoreCase(SupportedDBTypes.ORACLE.toString())
-					&& !args[4].equalsIgnoreCase(SupportedDBTypes.POSTGRESQL.toString())) {
+			if (args[4] != null && SupportedDBTypes.valueOf(args[4]) == null) {
 				System.err.println("The only supported DB types are Oracle and PostgreSQL!");
 				return false;
 			}
