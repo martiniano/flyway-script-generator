@@ -1,9 +1,11 @@
-package com.iwd.schema.service;
+package com.intelliware.flywayscriptgenerator.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.intelliware.flywayscriptgenerator.service.FlywayScriptGeneratorRunner;
 
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,

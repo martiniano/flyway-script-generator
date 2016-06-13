@@ -1,4 +1,4 @@
-package com.iwd.schema.service;
+package com.intelliware.flywayscriptgenerator.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import org.flywaydb.core.internal.dbsupport.oracle.OracleDbSupport;
 import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 import org.junit.Test;
+
+import com.intelliware.flywayscriptgenerator.service.SupportedDBTypes;
 
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,

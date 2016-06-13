@@ -1,4 +1,4 @@
-package com.iwd.schema.service;
+package com.intelliware.flywayscriptgenerator.service;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;

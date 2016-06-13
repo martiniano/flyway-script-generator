@@ -1,4 +1,4 @@
-package com.iwd.schema.service;
+package com.intelliware.flywayscriptgenerator.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
