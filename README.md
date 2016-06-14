@@ -151,7 +151,7 @@ INSERT INTO schema_version
 ((select coalesce(max(version_rank),0) from schema_version)+1,(select coalesce(max(installed_rank),0) from schema_version)+1,'1.001','MoreTables','SQL','V1_001__MoreTables.sql',-1511390255,'manual',current_timestamp,-1,TRUE);
 commit;
 ----------------------------------------------------------------------
-
+ 
 ```
 
 ## Potential Enhancements
