@@ -1,4 +1,5 @@
 # Executive Summary
+
 FlywayDB is an excellent mechanism to enable automated deployment of database changes and content.  It also comes 'out of the box' with mechanisms for an audit trail, checking past deployed versions against current version, etc.  
 
 However, some organizations operationally are not structured to perform production deployments, aside from manually.  Thus, the impetus for this project.
@@ -18,12 +19,14 @@ Missing from normal Flyway run operations will be:
 
 
 ## Precursor Readings
+
 This documents assumes you have read the following:
 
 * flywaydb [http://www.flywaydb.org]
 
 
 ## Why is this needed?
+
 * Many Intelliware development projects utilize FlywayBD as a mechanism for controlling + deploying database changes in an application, and tying said changes to the release of code
 * Operations groups often times aren't comfortable with pointing a DB ugrade tool (i.e. Flyway, liquibase) against a deployed DB
     * Thus, this is intended to provide a mechanism to build upon the work done for Flyway, but not force Flyway usage in certain 'controlled' environments
