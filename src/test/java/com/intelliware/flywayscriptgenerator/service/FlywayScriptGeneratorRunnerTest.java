@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.intelliware.flywayscriptgenerator.service.FlywayScriptGeneratorRunner;
-
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -39,9 +37,18 @@ public class FlywayScriptGeneratorRunnerTest {
 	}
 
 	@Test
-	public void testValidation_InvalidInputs() {
+	public void testValidation_InvalidInputs_MissingParam() {
 		// 1. generate valid input
 		String[] invalidInputArgs = { "../src/test/resources/dbMigration", "1", "1.001" };
+
+		assertFalse(FlywayScriptGeneratorRunner.validate(invalidInputArgs));
+	}
+
+	@Test
+	public void testValidation_InvalidInputs_BadDbType() {
+		// 1. generate valid input
+		String[] invalidInputArgs = { "../src/test/resources/dbMigration", "1", "1.001", "outputFile.txt",
+				"That's not a DB type!" };
 
 		assertFalse(FlywayScriptGeneratorRunner.validate(invalidInputArgs));
 	}

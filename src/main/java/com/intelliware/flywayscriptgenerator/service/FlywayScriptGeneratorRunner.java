@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.flywaydb.core.internal.dbsupport.DbSupport;
+import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -13,6 +14,24 @@ import org.flywaydb.core.internal.dbsupport.DbSupport;
 public class FlywayScriptGeneratorRunner {
 
 	private static FlywayScriptGenerator dataMigrator;
+
+	// private static final Map<String, DbSupport> supportedDbs = new
+	// HashMap<String, DbSupport>();
+	//
+	// static {
+	// supportedDbs.put("POSTGRESQL", new PostgreSQLDbSupport(null));
+	// supportedDbs.put("DB2", new DB2DbSupport(null));
+	// supportedDbs.put("DB2ZOS", new DB2zosDbSupport(null));
+	// supportedDbs.put("DERBY", new DerbyDbSupport(null));
+	// supportedDbs.put("H2", new H2DbSupport(null));
+	// supportedDbs.put("HSQL", new HsqlDbSupport(null));
+	// supportedDbs.put("MYSQL", new MySQLDbSupport(null));
+	// supportedDbs.put("ORACLE", new OracleDbSupport(null));
+	// supportedDbs.put("REDSHIFT", new RedshiftDbSupport(null));
+	// supportedDbs.put("SQLITE", new SQLiteDbSupport(null));
+	// supportedDbs.put("SQLSERVER", new SQLServerDbSupport(null));
+	// supportedDbs.put("VERTICA", new VerticaDbSupport(null));
+	// }
 
 	public static void main(String[] args) {
 
@@ -24,13 +43,9 @@ public class FlywayScriptGeneratorRunner {
 			// instantiate the DB
 			if (args.length == 4) {
 				System.out.println("Defaulting usage to Postgres!");
-				dbSupport = SupportedDBTypes.POSTGRESQL.getDbSupport();
+				dbSupport = new PostgreSQLDbSupport(null);
 			} else if (args.length == 5) {
-				if (args[4].equalsIgnoreCase(SupportedDBTypes.POSTGRESQL.toString())) {
-					dbSupport = SupportedDBTypes.POSTGRESQL.getDbSupport();
-				} else if (args[4].equalsIgnoreCase(SupportedDBTypes.ORACLE.toString())) {
-					dbSupport = SupportedDBTypes.ORACLE.getDbSupport();
-				}
+				dbSupport = SupportedDBTypes.valueOf(args[4].toUpperCase()).getDbSupport();
 			}
 
 			try {
@@ -54,14 +69,24 @@ public class FlywayScriptGeneratorRunner {
 			System.err.println("Start Version = starting revision number");
 			System.err.println("End Version = ending revision number");
 			System.err.println("File name = output file name");
-			System.err.println("Database Type = 'PostGresSQL' or 'Oracle' - if omitted, default is PostGres");
+			System.err.println("Database Type = Database type this script is targetted for");
+			System.err.println("Database Types Supported as follows:");
+			for (SupportedDBTypes supportedDbType : SupportedDBTypes.values()) {
+				System.err.println("   " + supportedDbType.toString());
+			}
 			return false;
 		} else if (args.length == 5) {
 			// validate if the database type is appropriate
-			if (args[4] != null && SupportedDBTypes.valueOf(args[4]) == null) {
-				System.err.println("The only supported DB types are Oracle and PostgreSQL!");
-				return false;
+			if (args[4] != null) {
+				// see if this is a supported type
+				try {
+					SupportedDBTypes.valueOf(args[4].toUpperCase());
+				} catch (IllegalArgumentException iae) {
+					System.err.println("DB Entry type of " + args[4] + " not supported!");
+					return false;
+				}
 			}
+			return true;
 		}
 
 		return true;
