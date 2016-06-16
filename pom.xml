@@ -5,7 +5,7 @@
 
 	<groupId>com.intelliware</groupId>
 	<artifactId>flywaydb-script-generator</artifactId>
-	<version>0.9</version>
+	<version>0.9.1</version>
 
 	<properties>
 		<slf4jVersion>1.6.1</slf4jVersion>

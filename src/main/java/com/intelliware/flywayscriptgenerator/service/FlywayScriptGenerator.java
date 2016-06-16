@@ -181,7 +181,7 @@ public class FlywayScriptGenerator {
 		sb.append("   nCount NUMBER;\n");
 		sb.append("   v_sql LONG;\n");
 		sb.append("begin\n");
-		sb.append("select count(*) into nCount FROM dba_tables where table_name = 'schema_version';\n");
+		sb.append("select count(*) into nCount FROM all_tables where table_name = 'schema_version';\n");
 		sb.append("IF(nCount <= 0) THEN\n");
 		sb.append("v_sql:='\n");
 		sb.append("CREATE TABLE \"schema_version\" (\n");
@@ -198,8 +198,9 @@ public class FlywayScriptGenerator {
 		sb.append("    \"success\" NUMBER(1) NOT NULL)");
 		sb.append("';\n");
 		sb.append("execute immediate v_sql;\n");
-		sb.append("END IF;");
-		sb.append("end;");
+		sb.append("END IF;\n");
+		sb.append("end;\n");
+		sb.append("/");
 
 		pw.println(sb.toString());
 	}
