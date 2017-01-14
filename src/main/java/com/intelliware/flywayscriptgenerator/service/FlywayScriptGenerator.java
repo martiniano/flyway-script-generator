@@ -37,13 +37,9 @@ import org.flywaydb.core.internal.util.Location;
 import org.slf4j.LoggerFactory;
 
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * 
- * A class to generate data scripts to be run by a DBA operations group. The
- * assumption being DBA Operations group will be much more comfortable with
- * running scripts, as opposed to running Flyway.
+ * A class to generate data scripts to be run by a DBA operations group. The assumption being DBA Operations group will be much more comfortable with running scripts, as opposed to running Flyway.
  */
 public class FlywayScriptGenerator {
 	// environment specific constants
@@ -57,7 +53,7 @@ public class FlywayScriptGenerator {
 																	// can be
 
 	public static final String INSERT_INTO_SCHEMA_VERSION = "INSERT INTO \"schema_version\"";
-	public static final String COLUMN_NAMES = "(\"version_rank\", \"installed_rank\", \"version\", \"description\", \"type\", \"script\", \"checksum\", \"installed_by\", \"installed_on\", \"execution_time\", \"success\") ";
+	public static final String COLUMN_NAMES = "(\"installed_rank\", \"version\", \"description\", \"type\", \"script\", \"checksum\", \"installed_by\", \"installed_on\", \"execution_time\", \"success\") ";
 	public static final String VALUES = " VALUES";
 	public static final String TYPE = "SQL"; // the value
 	public static final String USER = "manual"; // the value put into
@@ -75,13 +71,11 @@ public class FlywayScriptGenerator {
 		this.locations = locations;
 	}
 
-	public void writeDDLToRevision(String startingRevision, String endingRevision, String fileName, DbSupport dbSupport)
-			throws IOException {
+	public void writeDDLToRevision(String startingRevision, String endingRevision, String fileName, DbSupport dbSupport) throws IOException {
 
 		PrintStream out;
 
-		logger.info("Starting creating DB Script with starting revision: {}; ending revision: {}", startingRevision,
-				endingRevision);
+		logger.info("Starting creating DB Script with starting revision: {}; ending revision: {}", startingRevision, endingRevision);
 		logger.info("Using as base path to parse DB files: {}", locations);
 		logger.info("Output to filename: {}", fileName);
 
@@ -95,9 +89,7 @@ public class FlywayScriptGenerator {
 		Flyway flyway = createFlyway(null, locations, prefix);
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-		SqlMigrationResolver resolver = new SqlMigrationResolver(null, classLoader,
-				new Location(flyway.getLocations()[0]), null, null, flyway.getSqlMigrationPrefix(),
-				flyway.getSqlMigrationSeparator(), flyway.getSqlMigrationSuffix());
+		SqlMigrationResolver resolver = new SqlMigrationResolver(null, classLoader, new Location(flyway.getLocations()[0]), null, null, flyway.getSqlMigrationPrefix(), flyway.getSqlMigrationSeparator(), flyway.getSqlMigrationSuffix());
 		List<ResolvedMigration> revisions = resolver.resolveMigrations();
 
 		String sql;
@@ -125,8 +117,7 @@ public class FlywayScriptGenerator {
 				pw.println(INSERT_INTO_SCHEMA_VERSION);
 				pw.println(COLUMN_NAMES);
 				pw.println(VALUES);
-				pw.println(generateInsertValuesForSchemaVersionTable(revision.getVersion().getVersion(),
-						revision.getDescription(), revision.getScript(), revision.getChecksum(), dbSupport));
+				pw.println(generateInsertValuesForSchemaVersionTable(revision.getVersion().getVersion(), revision.getDescription(), revision.getScript(), revision.getChecksum(), dbSupport));
 			}
 		}
 		postRevisionWrite(pw);
@@ -141,8 +132,7 @@ public class FlywayScriptGenerator {
 	}
 
 	/**
-	 * Any text that has to be added to the Beginning of the generated script
-	 * For Postgres implementation
+	 * Any text that has to be added to the Beginning of the generated script For Postgres implementation
 	 * 
 	 * @param pw
 	 */
@@ -167,8 +157,7 @@ public class FlywayScriptGenerator {
 	}
 
 	/**
-	 * Any text that has to be added to the Beginning of the generated script
-	 * For Oracle implementation
+	 * Any text that has to be added to the Beginning of the generated script For Oracle implementation
 	 * 
 	 * @param pw
 	 */
@@ -295,8 +284,7 @@ public class FlywayScriptGenerator {
 		}
 	}
 
-	public static Writer getEncodedOutputStreamWriter(File outputFile)
-			throws UnsupportedEncodingException, FileNotFoundException {
+	public static Writer getEncodedOutputStreamWriter(File outputFile) throws UnsupportedEncodingException, FileNotFoundException {
 		return getEncodedOutputStreamWriter(new FileOutputStream(outputFile));
 	}
 
@@ -363,14 +351,13 @@ public class FlywayScriptGenerator {
 		};
 	}
 
-	public String generateInsertValuesForSchemaVersionTable(String revisionNumber, String description, String filename,
-			Integer checksum, DbSupport dbSupport) {
+	public String generateInsertValuesForSchemaVersionTable(String revisionNumber, String description, String filename, Integer checksum, DbSupport dbSupport) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("(");
-		sb.append("(select coalesce(max(\"version_rank\"),0) from \"schema_version\")+1"); // version
-																							// rank
-		sb.append(",");
+		//sb.append("(select coalesce(max(\"version_rank\"),0) from \"schema_version\")+1"); // version
+		// rank
+		//sb.append(",");
 		sb.append("(select coalesce(max(\"installed_rank\"),0) from \"schema_version\")+1"); // installed
 																								// rank
 		sb.append(",");

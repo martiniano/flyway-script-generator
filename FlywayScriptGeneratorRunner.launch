@@ -8,7 +8,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.intelliware.flywayscriptgenerator.service.FlywayScriptGeneratorRunner"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="filesystem:src/test/resources/dbmigrations 1 1.001 migrationscript.txt"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="filesystem:../core/Modulos/config/migrations/postgres 1.0.0.3_10 1.0.0.4_10 migrations/MIGRACAO_1.0.0.3_10_PARA_1.0.0.4_10.sql NUCLEARIS_"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="flywaydb-script-generator"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>
